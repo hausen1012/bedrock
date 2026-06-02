@@ -1,0 +1,55 @@
+package router
+
+import (
+	"embed"
+	"io/fs"
+	"net/http"
+	"strings"
+
+	"github.com/bedrock/backend/internal/handlers"
+	"github.com/bedrock/backend/internal/middleware"
+	"github.com/gin-gonic/gin"
+)
+
+func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
+	r := gin.Default()
+	r.Use(middleware.CORS())
+	r.Use(middleware.Logger())
+
+	authHandler := &handlers.AuthHandler{JWTSecret: jwtSecret}
+
+	api := r.Group("/api")
+	{
+		api.GET("/health", handlers.HealthCheck)
+		api.POST("/auth/login", authHandler.Login)
+	}
+
+	auth := api.Group("/auth")
+	auth.Use(middleware.JWTAuth(jwtSecret))
+	{
+		auth.GET("/me", authHandler.Me)
+		auth.POST("/logout", authHandler.Logout)
+		auth.PUT("/profile", handlers.UpdateProfile)
+		auth.PUT("/password", handlers.UpdatePassword)
+	}
+
+	serveStaticFiles(r, staticFS)
+	return r
+}
+
+func serveStaticFiles(r *gin.Engine, staticFS embed.FS) {
+	static, err := fs.Sub(staticFS, "web")
+	if err != nil {
+		return
+	}
+	fileServer := http.FileServer(http.FS(static))
+
+	r.Use(func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.URL.Path, "/api") {
+			c.Next()
+			return
+		}
+		fileServer.ServeHTTP(c.Writer, c.Request)
+		c.Abort()
+	})
+}
