@@ -3,6 +3,7 @@ package router
 import (
 	"embed"
 	"io/fs"
+	"log"
 	"net/http"
 	"strings"
 
@@ -13,8 +14,8 @@ import (
 
 func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
 	r := gin.Default()
-	r.Use(middleware.CORS())
 	r.Use(middleware.Logger())
+	r.Use(middleware.CORS())
 
 	authHandler := &handlers.AuthHandler{JWTSecret: jwtSecret}
 
@@ -40,6 +41,7 @@ func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
 func serveStaticFiles(r *gin.Engine, staticFS embed.FS) {
 	static, err := fs.Sub(staticFS, "web")
 	if err != nil {
+		log.Printf("WARN: embedded web directory not found, static file serving disabled")
 		return
 	}
 	fileServer := http.FileServer(http.FS(static))
