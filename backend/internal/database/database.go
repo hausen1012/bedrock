@@ -35,7 +35,9 @@ func Init(cfg *config.Config) error {
 
 func ensureAdmin(cfg *config.Config) error {
 	var count int64
-	DB.Model(&models.User{}).Count(&count)
+	if err := DB.Model(&models.User{}).Count(&count).Error; err != nil {
+		return fmt.Errorf("count users: %w", err)
+	}
 	if count > 0 {
 		return nil
 	}
