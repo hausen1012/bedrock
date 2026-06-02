@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/bedrock/backend/internal/database"
 	"github.com/bedrock/backend/internal/models"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type ProfileRequest struct {
@@ -29,7 +31,16 @@ func UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	userID, _ := c.Get("user_id")
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "未授权",
+			"data":    nil,
+		})
+		return
+	}
+
 	var user models.User
 	if err := database.DB.First(&user, userID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -42,9 +53,17 @@ func UpdateProfile(c *gin.Context) {
 
 	user.Username = req.Username
 	if err := database.DB.Save(&user).Error; err != nil {
-		c.JSON(http.StatusConflict, gin.H{
-			"code":    409,
-			"message": "用户名已存在",
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			c.JSON(http.StatusConflict, gin.H{
+				"code":    409,
+				"message": "用户名已存在",
+				"data":    nil,
+			})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    500,
+			"message": "修改失败",
 			"data":    nil,
 		})
 		return
@@ -71,7 +90,16 @@ func UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	userID, _ := c.Get("user_id")
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "未授权",
+			"data":    nil,
+		})
+		return
+	}
+
 	var user models.User
 	if err := database.DB.First(&user, userID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -102,7 +130,14 @@ func UpdatePassword(c *gin.Context) {
 	}
 
 	user.Password = string(hash)
-	database.DB.Save(&user)
+	if err := database.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    500,
+			"message": "密码修改失败",
+			"data":    nil,
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    200,
