@@ -18,7 +18,7 @@ func Load() *Config {
 	return &Config{
 		Port:         getEnv("PORT", "8080"),
 		DBPath:       getEnv("DB_PATH", "/data/db/bedrock.db"),
-		JWTSecret:    getEnv("JWT_SECRET", randomSecret()),
+		JWTSecret:    getEnv("JWT_SECRET", "change_me"),
 		InitUsername: getEnv("INIT_USERNAME", "admin"),
 		InitPassword: getEnv("INIT_PASSWORD", "admin123"),
 	}
