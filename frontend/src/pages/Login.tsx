@@ -57,7 +57,7 @@ export default function Login() {
               />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" size="sm" className="w-full" disabled={loading}>
               {loading ? '登录中...' : '登录'}
             </Button>
           </form>

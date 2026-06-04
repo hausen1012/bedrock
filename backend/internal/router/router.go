@@ -30,7 +30,6 @@ func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
 	{
 		auth.GET("/me", authHandler.Me)
 		auth.POST("/logout", authHandler.Logout)
-		auth.PUT("/profile", handlers.UpdateProfile)
 		auth.PUT("/password", handlers.UpdatePassword)
 	}
 

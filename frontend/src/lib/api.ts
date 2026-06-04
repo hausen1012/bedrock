@@ -35,11 +35,6 @@ export async function getMe() {
   return res.data
 }
 
-export async function updateProfile(username: string) {
-  const res = await api.put<ApiResponse<User>>('/auth/profile', { username })
-  return res.data
-}
-
 export async function updatePassword(oldPassword: string, newPassword: string) {
   const res = await api.put<ApiResponse<null>>('/auth/password', { old_password: oldPassword, new_password: newPassword })
   return res.data
