@@ -34,7 +34,7 @@ export default function Profile() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">个人中心</h1>
+      <h1 className="text-3xl font-bold tracking-tight">设置</h1>
 
       <Card>
         <CardHeader>

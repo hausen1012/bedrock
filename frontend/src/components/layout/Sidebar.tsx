@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, User, Moon, Sun, LogOut } from 'lucide-react'
+import { LayoutDashboard, User, Moon, Sun, LogOut, Mountain } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -7,8 +7,8 @@ import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { to: '/', label: '控制台', icon: LayoutDashboard },
-  { to: '/profile', label: '个人中心', icon: User },
+  { to: '/', label: '首页', icon: LayoutDashboard },
+  { to: '/profile', label: '设置', icon: User },
 ]
 
 export function Sidebar() {
@@ -16,8 +16,9 @@ export function Sidebar() {
   const { user, logout } = useAuth()
 
   return (
-    <aside className="flex h-screen w-60 flex-col border-r bg-card">
-      <div className="flex h-14 items-center px-6 font-semibold text-lg">
+    <aside className="flex h-screen w-56 flex-col border-r bg-card">
+      <div className="flex h-14 items-center gap-2 px-6 font-medium text-lg leading-none">
+        <Mountain className="h-5 w-5" strokeWidth={1.5} />
         Bedrock
       </div>
       <Separator />
@@ -42,14 +43,14 @@ export function Sidebar() {
         ))}
       </nav>
       <Separator />
-      <div className="p-3 space-y-2">
-        <div className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium">
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
             {user?.username?.charAt(0).toUpperCase()}
           </div>
-          <span className="truncate">{user?.username}</span>
+          <span className="truncate text-sm text-muted-foreground">{user?.username}</span>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 shrink-0">
           <Button variant="ghost" size="icon" onClick={toggle} title={theme === 'light' ? '切换深色' : '切换浅色'}>
             {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </Button>
