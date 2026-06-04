@@ -44,12 +44,7 @@ export function Sidebar() {
       </nav>
       <Separator />
       <div className="flex items-center justify-between p-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
-            {user?.username?.charAt(0).toUpperCase()}
-          </div>
-          <span className="truncate text-sm text-muted-foreground">{user?.username}</span>
-        </div>
+        <span className="truncate text-sm text-muted-foreground">{user?.username}</span>
         <div className="flex gap-1 shrink-0">
           <Button variant="ghost" size="icon" onClick={toggle} title={theme === 'light' ? '切换深色' : '切换浅色'}>
             {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
