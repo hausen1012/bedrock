@@ -5,7 +5,7 @@ COPY frontend/ .
 RUN npm ci && npm run build
 
 # Stage 2: Go build
-FROM golang:1.21-alpine AS backend
+FROM golang:1.25-alpine AS backend
 WORKDIR /app
 COPY backend/ .
 # The frontend build output must go to backend/cmd/server/web/ because
