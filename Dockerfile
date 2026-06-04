@@ -7,6 +7,8 @@ RUN npm ci && npm run build
 # Stage 2: Go build
 FROM golang:1.25-alpine AS backend
 WORKDIR /app
+RUN apk add --no-cache gcc musl-dev
+ENV CGO_ENABLED=1
 COPY backend/ .
 # The frontend build output must go to backend/cmd/server/web/ because
 # the //go:embed web/* directive in main.go resolves relative to cmd/server/
