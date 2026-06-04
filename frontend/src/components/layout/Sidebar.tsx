@@ -16,8 +16,8 @@ export function Sidebar() {
   const { user, logout } = useAuth()
 
   return (
-    <aside className="flex h-screen w-56 flex-col border-r bg-card">
-      <div className="flex h-14 items-center gap-2 px-6 font-medium text-lg leading-none">
+    <aside className="flex h-screen w-48 flex-col border-r bg-card">
+      <div className="flex h-14 items-center gap-2 px-6 font-medium text-base leading-none">
         <Mountain className="h-5 w-5" strokeWidth={1.5} />
         Bedrock
       </div>
