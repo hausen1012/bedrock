@@ -1,9 +1,8 @@
 package handlers
 
 import (
-	"net/http"
-
 	"github.com/bedrock/backend/internal/database"
+	"github.com/bedrock/backend/internal/helpers"
 	"github.com/bedrock/backend/internal/models"
 	"github.com/gin-gonic/gin"
 )
@@ -26,22 +25,14 @@ func GetSettings(c *gin.Context) {
 		data[s.Key] = s.Value
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"message": "ok",
-		"data":    data,
-	})
+	helpers.Success(c, data)
 }
 
 // UpdateSettings 认证接口，批量更新站点配置
 func UpdateSettings(c *gin.Context) {
 	var req map[string]string
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"message": "请求格式错误",
-			"data":    nil,
-		})
+		helpers.BadRequest(c, "请求格式错误")
 		return
 	}
 
@@ -59,9 +50,5 @@ func UpdateSettings(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"message": "保存成功",
-		"data":    nil,
-	})
+	helpers.SuccessWithMsg(c, "保存成功", nil)
 }

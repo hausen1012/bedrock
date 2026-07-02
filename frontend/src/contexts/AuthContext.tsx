@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import { login as apiLogin, getMe, logout as apiLogout } from '@/lib/api'
+import { createCtx } from '@/lib/create-ctx'
+import { tokenStorage } from '@/lib/token'
 import type { User } from '@/types'
 
 interface AuthContextValue {
@@ -10,27 +12,27 @@ interface AuthContextValue {
   updateUser: (user: User) => void
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+const [AuthProviderBase, useAuth] = createCtx<AuthContextValue>('Auth')
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = tokenStorage.get()
     if (!token) {
       setLoading(false)
       return
     }
     getMe()
       .then((res) => setUser(res.data))
-      .catch(() => localStorage.removeItem('token'))
+      .catch(() => tokenStorage.remove())
       .finally(() => setLoading(false))
   }, [])
 
   const login = useCallback(async (username: string, password: string) => {
     const res = await apiLogin(username, password)
-    localStorage.setItem('token', res.data.token)
+    tokenStorage.set(res.data.token)
     setUser(res.data.user)
   }, [])
 
@@ -40,21 +42,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // ignore server errors during logout
     }
-    localStorage.removeItem('token')
+    tokenStorage.remove()
     setUser(null)
   }, [])
 
   const updateUser = useCallback((u: User) => setUser(u), [])
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthProviderBase value={{ user, loading, login, logout, updateUser }}>
       {children}
-    </AuthContext.Provider>
+    </AuthProviderBase>
   )
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
-  return ctx
-}
+export { useAuth }

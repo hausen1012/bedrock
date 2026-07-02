@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getErrorMessage } from '@/lib/utils'
 
 export default function Profile() {
   const { config, refresh } = useSite()
@@ -47,8 +48,7 @@ export default function Profile() {
       await refresh()
       setSiteMsg('站点信息保存成功')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || '保存失败'
-      setSiteError(msg)
+      setSiteError(getErrorMessage(err, '保存失败'))
     } finally {
       setSaving(false)
     }
@@ -69,8 +69,7 @@ export default function Profile() {
       setNewPassword('')
       setConfirmPassword('')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || '修改失败'
-      setPwdError(msg)
+      setPwdError(getErrorMessage(err, '修改失败'))
     }
   }
 

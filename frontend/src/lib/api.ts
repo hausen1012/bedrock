@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { ApiResponse, LoginResponse, User } from '@/types'
+import { tokenStorage } from '@/lib/token'
 
 const api = axios.create({
   baseURL: '/api',
@@ -7,7 +8,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = tokenStorage.get()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -18,7 +19,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && error.config?.url !== '/auth/login') {
-      localStorage.removeItem('token')
+      tokenStorage.remove()
       window.location.href = '/login'
     }
     return Promise.reject(error)

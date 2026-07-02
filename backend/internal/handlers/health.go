@@ -1,17 +1,12 @@
 package handlers
 
 import (
-	"net/http"
-
+	"github.com/bedrock/backend/internal/helpers"
 	"github.com/gin-gonic/gin"
 )
 
 func HealthCheck(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"message": "ok",
-		"data": gin.H{
-			"status": "healthy",
-		},
+	helpers.Success(c, gin.H{
+		"status": "healthy",
 	})
 }

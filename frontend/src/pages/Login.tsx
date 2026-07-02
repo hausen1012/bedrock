@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { getErrorMessage } from '@/lib/utils'
 
 export default function Login() {
   const { login } = useAuth()
@@ -21,8 +22,7 @@ export default function Login() {
     try {
       await login(username, password)
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || '登录失败'
-      setError(msg)
+      setError(getErrorMessage(err, '登录失败'))
     } finally {
       setLoading(false)
     }

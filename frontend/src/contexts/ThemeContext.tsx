@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { createCtx } from '@/lib/create-ctx'
 
 type Theme = 'light' | 'dark'
 
@@ -7,7 +8,7 @@ interface ThemeContextValue {
   toggle: () => void
 }
 
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
+const [ThemeProviderBase, useTheme] = createCtx<ThemeContextValue>('Theme')
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -24,15 +25,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggle }}>
-      {children}
-    </ThemeContext.Provider>
-  )
+  return <ThemeProviderBase value={{ theme, toggle }}>{children}</ThemeProviderBase>
 }
 
-export function useTheme() {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider')
-  return ctx
-}
+export { useTheme }

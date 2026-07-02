@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import { getSettings } from '@/lib/api'
+import { createCtx } from '@/lib/create-ctx'
 
 interface SiteConfig {
   site_name: string
@@ -17,7 +18,7 @@ const defaultConfig: SiteConfig = {
   site_icon: '',
 }
 
-const SiteContext = createContext<SiteContextValue | undefined>(undefined)
+const [SiteProviderBase, useSite] = createCtx<SiteContextValue>('Site')
 
 export function SiteProvider({ children }: { children: ReactNode }) {
   const [config, setConfig] = useState<SiteConfig>(defaultConfig)
@@ -46,14 +47,10 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   }, [config.site_name])
 
   return (
-    <SiteContext.Provider value={{ config, loading, refresh }}>
+    <SiteProviderBase value={{ config, loading, refresh }}>
       {children}
-    </SiteContext.Provider>
+    </SiteProviderBase>
   )
 }
 
-export function useSite() {
-  const ctx = useContext(SiteContext)
-  if (!ctx) throw new Error('useSite must be used within SiteProvider')
-  return ctx
-}
+export { useSite }
