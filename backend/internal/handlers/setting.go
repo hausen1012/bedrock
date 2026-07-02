@@ -15,14 +15,14 @@ const (
 
 // GetSettings 公开接口，返回所有站点配置
 func GetSettings(c *gin.Context) {
-	var settings []models.Setting
-	database.DB.Find(&settings)
+	var configs []models.Config
+	database.DB.Find(&configs)
 
 	data := map[string]string{
 		"site_name": DefaultSiteName,
 		"site_icon": "",
 	}
-	for _, s := range settings {
+	for _, s := range configs {
 		data[s.Key] = s.Value
 	}
 
@@ -51,11 +51,11 @@ func UpdateSettings(c *gin.Context) {
 			continue
 		}
 		var count int64
-		database.DB.Model(&models.Setting{}).Where("key = ?", key).Count(&count)
+		database.DB.Model(&models.Config{}).Where("key = ?", key).Count(&count)
 		if count == 0 {
-			database.DB.Create(&models.Setting{Key: key, Value: value})
+			database.DB.Create(&models.Config{Key: key, Value: value})
 		} else {
-			database.DB.Model(&models.Setting{}).Where("key = ?", key).Update("value", value)
+			database.DB.Model(&models.Config{}).Where("key = ?", key).Update("value", value)
 		}
 	}
 

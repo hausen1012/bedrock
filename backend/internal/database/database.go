@@ -25,7 +25,7 @@ func Init(cfg *config.Config) error {
 		return fmt.Errorf("open db: %w", err)
 	}
 
-	if err := db.AutoMigrate(&models.User{}, &models.Setting{}); err != nil {
+	if err := db.AutoMigrate(&models.User{}, &models.Config{}); err != nil {
 		return fmt.Errorf("migrate: %w", err)
 	}
 
