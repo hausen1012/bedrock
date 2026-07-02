@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useAuth } from '@/contexts/AuthContext'
+import { useSite } from '@/contexts/SiteContext'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -14,12 +15,17 @@ const navItems = [
 export function Sidebar() {
   const { theme, toggle } = useTheme()
   const { user, logout } = useAuth()
+  const { config } = useSite()
 
   return (
     <aside className="flex h-screen w-48 flex-col border-r bg-card">
       <div className="flex h-14 items-center gap-2 px-6 font-medium text-base leading-none">
-        <Mountain className="h-5 w-5" strokeWidth={1.5} />
-        Bedrock
+        {config.site_icon ? (
+          <img src={config.site_icon} alt="logo" className="h-5 w-5 object-contain" />
+        ) : (
+          <Mountain className="h-5 w-5" strokeWidth={1.5} />
+        )}
+        {config.site_name}
       </div>
       <Separator />
       <nav className="flex-1 space-y-1 p-3">
