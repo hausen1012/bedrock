@@ -3,7 +3,7 @@ package router
 import (
 	"embed"
 	"io/fs"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -42,7 +42,7 @@ func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
 func serveStaticFiles(r *gin.Engine, staticFS embed.FS) {
 	static, err := fs.Sub(staticFS, "web")
 	if err != nil {
-		log.Printf("WARN: embedded web directory not found, static file serving disabled")
+		slog.Warn("嵌入的 web 目录不存在，静态文件服务已禁用")
 		return
 	}
 	fileServer := http.FileServer(http.FS(static))

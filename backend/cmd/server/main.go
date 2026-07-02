@@ -3,7 +3,8 @@ package main
 import (
 	"embed"
 	"fmt"
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/bedrock/backend/internal/config"
 	"github.com/bedrock/backend/internal/database"
@@ -17,13 +18,15 @@ func main() {
 	cfg := config.Load()
 
 	if err := database.Init(cfg); err != nil {
-		log.Fatalf("database init failed: %v", err)
+		slog.Error("数据库初始化失败", slog.String("error", err.Error()))
+		os.Exit(1)
 	}
 
 	r := router.Setup(staticFS, cfg.JWTSecret)
 	addr := fmt.Sprintf(":%s", cfg.Port)
-	log.Printf("Server starting on %s", addr)
+	slog.Info("服务启动", slog.String("addr", addr))
 	if err := r.Run(addr); err != nil {
-		log.Fatalf("server start failed: %v", err)
+		slog.Error("服务启动失败", slog.String("error", err.Error()))
+		os.Exit(1)
 	}
 }
