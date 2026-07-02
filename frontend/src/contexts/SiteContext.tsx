@@ -41,6 +41,10 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     refresh()
   }, [refresh])
 
+  useEffect(() => {
+    document.title = config.site_name
+  }, [config.site_name])
+
   return (
     <SiteContext.Provider value={{ config, loading, refresh }}>
       {children}
