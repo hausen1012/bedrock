@@ -50,10 +50,13 @@ func UpdateSettings(c *gin.Context) {
 		if key != "site_name" && key != "site_icon" {
 			continue
 		}
-		database.DB.Where("key = ?", key).Assign(models.Setting{
-			Key:   key,
-			Value: value,
-		}).FirstOrCreate(&models.Setting{})
+		var count int64
+		database.DB.Model(&models.Setting{}).Where("key = ?", key).Count(&count)
+		if count == 0 {
+			database.DB.Create(&models.Setting{Key: key, Value: value})
+		} else {
+			database.DB.Model(&models.Setting{}).Where("key = ?", key).Update("value", value)
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{

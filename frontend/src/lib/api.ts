@@ -51,6 +51,6 @@ export async function getSettings() {
 }
 
 export async function updateSettings(data: Record<string, string>) {
-  const res = await api.put<ApiResponse<null>>('/settings', data)
+  const res = await api.put<ApiResponse<null>>('/auth/settings', data)
   return res.data
 }

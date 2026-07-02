@@ -78,38 +78,38 @@ export default function Profile() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight">设置</h1>
 
-      <Card>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
         <CardHeader>
           <CardTitle>站点信息</CardTitle>
           <CardDescription>修改站点名称和图标</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSiteSave} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="site-name">站点名称</Label>
-                <Input
-                  id="site-name"
-                  value={siteName}
-                  onChange={(e) => setSiteName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="site-icon">站点图标</Label>
-                <Input
-                  id="site-icon"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleIconFile}
-                />
-                {siteIcon && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <img src={siteIcon} alt="图标预览" className="h-8 w-8 rounded object-contain border" />
-                    <span className="text-xs text-muted-foreground">图标预览</span>
-                  </div>
-                )}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="site-name">站点名称</Label>
+              <Input
+                id="site-name"
+                value={siteName}
+                onChange={(e) => setSiteName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="site-icon">站点图标</Label>
+              <Input
+                id="site-icon"
+                type="file"
+                accept="image/*"
+                onChange={handleIconFile}
+              />
+              {siteIcon && (
+                <div className="mt-2 flex items-center gap-2">
+                  <img src={siteIcon} alt="图标预览" className="h-8 w-8 rounded object-contain border" />
+                  <span className="text-xs text-muted-foreground">图标预览</span>
+                  <Button type="button" variant="ghost" size="sm" className="text-xs text-destructive h-auto px-2 py-0" onClick={() => setSiteIcon('')}>清除</Button>
+                </div>
+              )}
             </div>
             {siteMsg && <p className="text-sm text-green-600 dark:text-green-400">{siteMsg}</p>}
             {siteError && <p className="text-sm text-destructive">{siteError}</p>}
@@ -165,6 +165,7 @@ export default function Profile() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }
