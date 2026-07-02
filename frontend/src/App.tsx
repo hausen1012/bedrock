@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { SiteProvider } from '@/contexts/SiteContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ProtectedRoute } from '@/components/guards/ProtectedRoute'
 import { PublicRoute } from '@/components/guards/PublicRoute'
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
+        <SiteProvider>
         <AuthProvider>
           <Routes>
             <Route
@@ -34,6 +36,7 @@ export default function App() {
             </Route>
           </Routes>
         </AuthProvider>
+        </SiteProvider>
       </ThemeProvider>
     </BrowserRouter>
   )
