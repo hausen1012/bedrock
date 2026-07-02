@@ -22,6 +22,7 @@ func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
 	api := r.Group("/api")
 	{
 		api.GET("/health", handlers.HealthCheck)
+		api.GET("/settings", handlers.GetSettings)
 		api.POST("/auth/login", authHandler.Login)
 	}
 
@@ -31,6 +32,7 @@ func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
 		auth.GET("/me", authHandler.Me)
 		auth.POST("/logout", authHandler.Logout)
 		auth.PUT("/password", handlers.UpdatePassword)
+		auth.PUT("/settings", handlers.UpdateSettings)
 	}
 
 	serveStaticFiles(r, staticFS)
