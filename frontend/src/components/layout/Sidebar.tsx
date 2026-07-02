@@ -19,13 +19,13 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-screen w-48 flex-col border-r bg-card">
-      <div className="flex h-14 items-center gap-2 px-6 font-medium text-base leading-none">
+      <div className="flex h-14 items-center gap-2 px-6 font-medium text-base leading-none min-w-0">
         {config.site_icon ? (
-          <img src={config.site_icon} alt="logo" className="h-5 w-5 object-contain" />
+          <img src={config.site_icon} alt="logo" className="h-5 w-5 shrink-0 object-contain" />
         ) : (
-          <Mountain className="h-5 w-5" strokeWidth={1.5} />
+          <Mountain className="h-5 w-5 shrink-0" strokeWidth={1.5} />
         )}
-        {config.site_name}
+        <span className="truncate">{config.site_name}</span>
       </div>
       <Separator />
       <nav className="flex-1 space-y-1 p-3">
