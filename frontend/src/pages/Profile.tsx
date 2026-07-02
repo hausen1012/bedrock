@@ -32,6 +32,9 @@ export default function Profile() {
     reader.onload = () => {
       setSiteIcon(reader.result as string)
     }
+    reader.onerror = () => {
+      setSiteError('读取文件失败')
+    }
     reader.readAsDataURL(file)
   }
 

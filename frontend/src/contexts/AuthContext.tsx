@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react'
-import { login as apiLogin, getMe, logout as apiLogout } from '@/lib/api'
+import { login as apiLogin, getMe, logout as apiLogout, setOnUnauthorized } from '@/lib/api'
 import { createCtx } from '@/lib/create-ctx'
 import { tokenStorage } from '@/lib/token'
 import type { User } from '@/types'
@@ -18,6 +18,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const clearAuth = useCallback(() => {
+    tokenStorage.remove()
+    setUser(null)
+  }, [])
+
+  useEffect(() => {
+    setOnUnauthorized(clearAuth)
+    return () => setOnUnauthorized(() => {})
+  }, [clearAuth])
+
   useEffect(() => {
     const token = tokenStorage.get()
     if (!token) {
@@ -26,9 +36,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     getMe()
       .then((res) => setUser(res.data))
-      .catch(() => tokenStorage.remove())
+      .catch(() => clearAuth())
       .finally(() => setLoading(false))
-  }, [])
+  }, [clearAuth])
 
   const login = useCallback(async (username: string, password: string) => {
     const res = await apiLogin(username, password)
@@ -40,10 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await apiLogout()
     } catch {
-      // ignore server errors during logout
+      // 忽略退出登录时的服务端错误
     }
-    tokenStorage.remove()
-    setUser(null)
+    clearAuth()
   }, [])
 
   const updateUser = useCallback((u: User) => setUser(u), [])

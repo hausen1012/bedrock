@@ -15,12 +15,19 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// 401 回调，由 AuthContext 注册，实现退出登录后刷新页面状态
+let onUnauthorized: (() => void) | null = null
+
+export function setOnUnauthorized(cb: () => void) {
+  onUnauthorized = cb
+}
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && error.config?.url !== '/auth/login') {
       tokenStorage.remove()
-      window.location.href = '/login'
+      onUnauthorized?.()
     }
     return Promise.reject(error)
   },

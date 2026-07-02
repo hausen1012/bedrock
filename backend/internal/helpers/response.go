@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/bedrock/backend/internal/database"
@@ -76,7 +77,7 @@ func GetCurrentUserID(c *gin.Context) (uint, bool) {
 func GetCurrentUser(c *gin.Context) (*models.User, error) {
 	userID, exists := GetCurrentUserID(c)
 	if !exists {
-		return nil, nil
+		return nil, fmt.Errorf("未找到当前用户")
 	}
 	var user models.User
 	if err := database.DB.First(&user, userID).Error; err != nil {

@@ -13,9 +13,10 @@ import (
 )
 
 func Setup(staticFS embed.FS, jwtSecret string) *gin.Engine {
-	r := gin.Default()
+	r := gin.New()
 	r.Use(middleware.Logger())
 	r.Use(middleware.CORS())
+	r.Use(gin.Recovery())
 
 	authHandler := &handlers.AuthHandler{JWTSecret: jwtSecret}
 
