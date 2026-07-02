@@ -85,29 +85,31 @@ export default function Profile() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSiteSave} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="site-name">站点名称</Label>
-              <Input
-                id="site-name"
-                value={siteName}
-                onChange={(e) => setSiteName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="site-icon">站点图标</Label>
-              <Input
-                id="site-icon"
-                type="file"
-                accept="image/*"
-                onChange={handleIconFile}
-              />
-              {siteIcon && (
-                <div className="mt-2 flex items-center gap-2">
-                  <img src={siteIcon} alt="图标预览" className="h-8 w-8 rounded object-contain border" />
-                  <span className="text-xs text-muted-foreground">图标预览</span>
-                </div>
-              )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="site-name">站点名称</Label>
+                <Input
+                  id="site-name"
+                  value={siteName}
+                  onChange={(e) => setSiteName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="site-icon">站点图标</Label>
+                <Input
+                  id="site-icon"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleIconFile}
+                />
+                {siteIcon && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <img src={siteIcon} alt="图标预览" className="h-8 w-8 rounded object-contain border" />
+                    <span className="text-xs text-muted-foreground">图标预览</span>
+                  </div>
+                )}
+              </div>
             </div>
             {siteMsg && <p className="text-sm text-green-600 dark:text-green-400">{siteMsg}</p>}
             {siteError && <p className="text-sm text-destructive">{siteError}</p>}
