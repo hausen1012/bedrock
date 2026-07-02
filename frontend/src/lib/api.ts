@@ -44,3 +44,13 @@ export async function logout() {
   const res = await api.post<ApiResponse<null>>('/auth/logout')
   return res.data
 }
+
+export async function getSettings() {
+  const res = await api.get<ApiResponse<Record<string, string>>>('/settings')
+  return res.data
+}
+
+export async function updateSettings(data: Record<string, string>) {
+  const res = await api.put<ApiResponse<null>>('/settings', data)
+  return res.data
+}
